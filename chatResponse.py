@@ -4,8 +4,7 @@ from openai import OpenAI
 import config
 import json
 
-
-
+from topicModelling import getTopics
 
 
 def openaiSearch(im):
@@ -27,7 +26,11 @@ def openaiSearch(im):
 
 
 
-def similaritySearch(im,vectorizer,tfidf):
+def similaritySearch(im,topics):
+
+    # vectorizer = saved from input
+    #tfidf = saved from input
+
 
     Y_vec = vectorizer.transform(im)
     Y_tfidf = tfidf.fit_transform(Y_vec)
@@ -38,12 +41,19 @@ def similaritySearch(im,vectorizer,tfidf):
     else:
         return answers[np.argmax(cosine_similarity(Y_tfidf, X_tfidf)[0])]
 
-
+    # get
 
 
 
 def getResponse(userquestion):
     global tfidf, answers, X_tfidf
+
+    topics = getTopics(userquestion)
+    similaritySearch(userquestion,topics)
+
+
+
+
     # Classify which model this belongs to
     # Pass the question to question_to_vector
     # Pass the question and vector to similarity search

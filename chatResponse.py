@@ -38,23 +38,26 @@ def query_pipeline(embed_question, topic,collection):
     pipeline = [
         {
             '$vectorSearch': {
-            'index': 'vector-search-question', 
+                'index': 'vector-search-question', 
                 'path': 'embed_question', 
                 'queryVector': embed_question,
-            'numCandidates': 100, 
-            'limit': 1
+                'filter': {
+                    'topic_words':topic
+                        },
+                'numCandidates': 100, 
+                'limit': 1
             }
         }, {
             '$project': {
-            '_id': 0, 
-            'answer':1,
-            'category':1,
-            'score': {
-                '$meta': 'vectorSearchScore'
-            }
+                '_id': 0, 
+                'answer': 1,
+                'category': 1,
+                'score': {
+                    '$meta': 'vectorSearchScore'
+                }
             }
         }
-        ]
+    ]
 
     return pipeline
 

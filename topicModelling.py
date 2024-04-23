@@ -30,7 +30,7 @@ def getTopics(userQuestion):
     new_data['Question_processed'] = new_data['Question_processed'].apply(lemmatize_text)
     new_data['Question_processed'] = new_data['Question_processed'].apply(lambda x: ' '.join(x))
 
-    new_text = new_data.Question.values.tolist()
+    new_text = new_data.Question_processed.values.tolist()
     new_text_words = text_to_words(new_text)
     new_corpus_vec = [dict_word.doc2bow(text) for text in new_text_words]
 

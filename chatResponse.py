@@ -40,10 +40,7 @@ def query_pipeline(embed_question, topic,collection):
             '$vectorSearch': {
             'index': 'vector-search-question', 
                 'path': 'embed_question', 
-                'filter': {
-                'topic_words': topic
-                }, 
-                'queryVector': embed_question, 
+                'queryVector': embed_question,
             'numCandidates': 100, 
             'limit': 1
             }
@@ -59,39 +56,32 @@ def query_pipeline(embed_question, topic,collection):
         }
         ]
 
-    ##return pipeline
-    result = collection.aggregate(pipeline)
-    for i in result:
-       print(i)
-       return i
-
-    return "No result"
+    return pipeline
 
 
 def similaritySearch(collection, topic, im):
     
     embed_question = convertUserQuestionToVector(im)
-    print(embed_question)
-
-    result = query_pipeline(embed_question, topic,collection)
+    pipeline = query_pipeline(embed_question, topic,collection)
     
-    #result = collection.aggregate(pipeline)
+    result = collection.aggregate(pipeline)
     #print(result)
-
-    if result[0]['score'] < 0.7:
-        answer = openaiSearch(im)
-        return answer
-    else:
-        return result[0]['answer']
+    for i in result:
+        if i['score'] < 0.2:
+            answer = openaiSearch(im)
+            return answer
+        else:
+            return i['answer']
 
 
 def getResponse(userquestion):
     global tfidf, answers, X_tfidf
 
     topics = getTopics(userquestion)
-    print(topics)
+    #print(topics)
+    topics = 'data, science, industry'
     collection = config.connect_mongoDB()
-    similaritySearch(collection,topics,userquestion)
+    answer = similaritySearch(collection,topics,userquestion)
 
 
 
@@ -99,8 +89,8 @@ def getResponse(userquestion):
     # Classify which model this belongs to
     # Pass the question to question_to_vector
     # Pass the question and vector to similarity search
-    answer = ""
-    return ""
+
+    return answer
 
 
 

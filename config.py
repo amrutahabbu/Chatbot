@@ -10,8 +10,8 @@ def connect_mongoDB():
     try:
         connect_string = "mongodb+srv://dbkhoatrann1998:GHbuiwMymRsTtcPC@dbkhoatrann1998.zbjantr.mongodb.net/?retryWrites=true&w=majority&appName=dbkhoatrann1998"
         mongodb_client = pymongo.MongoClient(connect_string)
-    except:
-        print('error occured')
+    except Exception as e:
+        print('error occured ',e)
     
     # Connect to CIS8045 database 
     db = mongodb_client['CIS8045']

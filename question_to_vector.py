@@ -19,9 +19,10 @@ def convertUserQuestionToVector(processed_question):
     # Load tfidf_vectorizer
     with open('model/tfidf_vectorizer.pkl', 'rb') as f:
         tfidf_vectorizer = pickle.load(f)
-    
+
+    print(processed_question)
     # Use tfidf to vectorize processed question
-    embed_question = tfidf_vectorizer.transform([processed_question]).toarray().tolist()[0]
+    embed_question = tfidf_vectorizer.transform(processed_question).toarray().tolist()[0]
 
     # return embed_question
     return embed_question

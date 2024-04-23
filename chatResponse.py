@@ -83,7 +83,9 @@ def getResponse(userquestion):
     global tfidf, answers, X_tfidf
 
     topics = getTopics(userquestion)
-    similaritySearch(userquestion,topics)
+    print(topics)
+    collection = config.connect_mongoDB()
+    similaritySearch(collection,topics,userquestion)
 
 
 

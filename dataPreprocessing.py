@@ -20,10 +20,15 @@ def preprocess_text(text):
 
 # Function to tokenize text
 def tokenize_text(text):
-    text = text.lower()
     tokenizer = RegexpTokenizer('\w+|\$[\d\.]+|\S+')
-    words = tokenizer.tokenize(text)
-    return words
+    if isinstance(text, str):  # If text is a single string
+        text = text.lower()
+        words = tokenizer.tokenize(text)
+        return words
+    elif isinstance(text, list):  # If text is a list of strings
+        lowercased_words = [word.lower() for word in text]
+        tokenize_words =   [tokenizer.tokenize(word) for word in lowercased_words]
+        return lowercased_words
 
 # Function to remove stopwords
 def remove_stopwords(words):

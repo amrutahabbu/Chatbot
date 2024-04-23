@@ -1,7 +1,9 @@
+
+import gensim
 from gensim.utils import simple_preprocess
 # Function to convert text to words
 import gensim.corpora as corpora
-from topicModelling import lda_model
+
 
 
 def text_to_words(texts):
@@ -11,7 +13,7 @@ def text_to_words(texts):
 # Function to extract topics using LDA model and return topic numbers
 def extract_topics(text):
     dict_word = getDictUserQuestion(text)
-
+    lda_model = gensim.models.LdaModel.load('model/lda_model')
     text_words = text_to_words([text])
     # Create corpus
     corpus_vec = [dict_word.doc2bow(words) for words in text_words]

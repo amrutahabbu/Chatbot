@@ -24,7 +24,7 @@ def openaiSearch(im):
     answer = response.choices[0].message.content
     return answer
 
-def query_pipeline(embed_question, topic):
+def query_pipeline(embed_question, topic,collection):
     """
     This function is used to create the pipeline query based on the embedded question and topics found
 
@@ -58,25 +58,31 @@ def query_pipeline(embed_question, topic):
             }
         }
         ]
-    return pipeline
+
+    ##return pipeline
+    result = collection.aggregate(pipeline)
+    for i in result:
+       print(i)
+       return i
+
+    return "No result"
 
 
 def similaritySearch(collection, topic, im):
     
     embed_question = convertUserQuestionToVector(im)
+    print(embed_question)
 
-    pipeline = query_pipeline(embed_question, topic)
+    result = query_pipeline(embed_question, topic,collection)
     
-    result = collection.aggregate(pipeline)
+    #result = collection.aggregate(pipeline)
+    #print(result)
 
-    if result['score'] < 0.7:
+    if result[0]['score'] < 0.7:
         answer = openaiSearch(im)
         return answer
     else:
-        return result['answer']
-
-    # get
-
+        return result[0]['answer']
 
 
 def getResponse(userquestion):

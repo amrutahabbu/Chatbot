@@ -21,8 +21,9 @@ def convertUserQuestionToVector(processed_question):
         tfidf_vectorizer = pickle.load(f)
 
     print(processed_question)
+    processed_question = "data science"
     # Use tfidf to vectorize processed question
-    embed_question = tfidf_vectorizer.transform(processed_question).toarray().tolist()[0]
+    embed_question = tfidf_vectorizer.transform([processed_question]).toarray().tolist()[0]
 
     # return embed_question
     return embed_question

@@ -18,7 +18,7 @@ def connect_mongoDB():
     
     # Connect to collection
     collection = db['data']
-    print("Successfully Connected to Mongo DB and use collection data in CIS5045 database")
+    #print("Successfully Connected to Mongo DB and use collection data in CIS5045 database")
     
     return collection
 

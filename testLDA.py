@@ -1,8 +1,8 @@
 
 import gensim
 
-lda_model_1 = gensim.models.LdaModel.load('model/lda_model')
-topics = lda_model_1.show_topic(2, topn=3)
+lda_model_1 = gensim.models.LdaModel.load('Topic_model_similarity/lda_model')
+topics = lda_model_1.show_topic(0, topn=3)
 print(topics)
 
 '''

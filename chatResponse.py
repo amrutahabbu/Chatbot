@@ -82,7 +82,7 @@ def getResponse(userquestion):
 
     topics = getTopics(userquestion)
     #print(topics)
-    topics = 'data, science, industry'
+    #topics = 'data, science, industry'
     collection = config.connect_mongoDB()
     answer = similaritySearch(collection,topics,userquestion)
 

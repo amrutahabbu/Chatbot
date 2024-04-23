@@ -1,8 +1,6 @@
 from gensim.utils import simple_preprocess
 # Function to convert text to words
-from gensim.utils import simple_preprocess
 import gensim.corpora as corpora
-
 from topicModelling import lda_model
 
 

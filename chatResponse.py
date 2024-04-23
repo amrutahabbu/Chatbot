@@ -3,6 +3,7 @@ import numpy as np
 from openai import OpenAI
 import config
 import json
+from question_to_vector import convertUserQuestionToVector
 
 from topicModelling import getTopics
 
@@ -23,23 +24,56 @@ def openaiSearch(im):
     answer = response.choices[0].message.content
     return answer
 
+def query_pipeline(embed_question, topic):
+    """
+    This function is used to create the pipeline query based on the embedded question and topics found
+
+    Args:
+        embed_question (_vector_): result of convertUserQuestionToVector from question_to_vector.py
+        topic (_string_): result of getTopics from topicModelling.py
+
+    Returns:
+        pipeline (_list_): return the pipeline which will be used in similaritySearch to retrieve answer
+    """
+    pipeline = [
+        {
+            '$vectorSearch': {
+            'index': 'vector-search-question', 
+                'path': 'embed_question', 
+                'filter': {
+                'topic_words': topic
+                }, 
+                'queryVector': embed_question, 
+            'numCandidates': 100, 
+            'limit': 1
+            }
+        }, {
+            '$project': {
+            '_id': 0, 
+            'answer':1,
+            'category':1,
+            'score': {
+                '$meta': 'vectorSearchScore'
+            }
+            }
+        }
+        ]
+    return pipeline
 
 
+def similaritySearch(collection, topic, im):
+    
+    embed_question = convertUserQuestionToVector(im)
 
-def similaritySearch(im,topics):
+    pipeline = query_pipeline(embed_question, topic)
+    
+    result = collection.aggregate(pipeline)
 
-    # vectorizer = saved from input
-    #tfidf = saved from input
-
-
-    Y_vec = vectorizer.transform(im)
-    Y_tfidf = tfidf.fit_transform(Y_vec)
-    cos_sim = np.rad2deg(np.arccos(max(cosine_similarity(Y_tfidf, X_tfidf)[0])))
-    if cos_sim > 60:
+    if result['score'] < 0.7:
         answer = openaiSearch(im)
         return answer
     else:
-        return answers[np.argmax(cosine_similarity(Y_tfidf, X_tfidf)[0])]
+        return result['answer']
 
     # get
 

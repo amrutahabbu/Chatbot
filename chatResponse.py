@@ -1,3 +1,4 @@
+import pymongo
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from openai import OpenAI
@@ -63,18 +64,28 @@ def query_pipeline(embed_question, topic,collection):
 
 
 def similaritySearch(collection, topic, im):
-    
-    embed_question = convertUserQuestionToVector(im)
-    pipeline = query_pipeline(embed_question, topic,collection)
-    
-    result = collection.aggregate(pipeline)
-    #print(result)
-    for i in result:
-        if i['score'] < 0.2:
+
+    try:
+        embed_question = convertUserQuestionToVector(im)
+        pipeline = query_pipeline(embed_question, topic,collection)
+
+
+        result = collection.aggregate(pipeline)
+        for i in result:
+         if i['score'] < 0.6:
             answer = openaiSearch(im)
             return answer
-        else:
+         else:
             return i['answer']
+
+    except pymongo.errors.OperationFailure as e:
+        answer = openaiSearch(im)
+        return answer
+    except Exception as ex:
+        answer = openaiSearch(im)
+        return answer
+
+
 
 
 def getResponse(userquestion):

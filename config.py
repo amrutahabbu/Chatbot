@@ -7,6 +7,7 @@ import pymongo
 
 def connect_mongoDB():
     # Initialize the client
+    # These are personal credentials to mongo atlas. You can replace these with yours!
     try:
         connect_string = "mongodb+srv://dbkhoatrann1998:GHbuiwMymRsTtcPC@dbkhoatrann1998.zbjantr.mongodb.net/?retryWrites=true&w=majority&appName=dbkhoatrann1998"
         mongodb_client = pymongo.MongoClient(connect_string)
@@ -24,5 +25,5 @@ def connect_mongoDB():
 
 def getOpenAIKey():
 
-    api_key = "add_your_key"
+    api_key = "your_api_key"
     return api_key

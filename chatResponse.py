@@ -9,22 +9,6 @@ from question_to_vector import convertUserQuestionToVector
 from topicModelling import getTopics
 
 
-def openaiSearch(im):
-    client = OpenAI(api_key=config.getOpenAIKey())
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo-0125",
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": "You are an AI assistant in an data Science world. You should identify educational questions. \
-                 This platform receives question and provides relevant answer. \
-                 Respond with a JSON object that contains only one field, 'answser'. Don't include the word, answer:, before the actual sentence "},
-            {"role": "user",
-             "content": f"{im}?"}
-        ]
-    )
-    answer = response.choices[0].message.content
-    return answer
-
 def query_pipeline(embed_question, topic,collection):
     """
     This function is used to create the pipeline query based on the embedded question and topics found
@@ -73,19 +57,17 @@ def similaritySearch(collection, topic, im):
         result = collection.aggregate(pipeline)
         for i in result:
          if i['score'] < 0.6:
-            answer = openaiSearch(im)
+            answer = "Sorry! Our database is still learning"
             return answer
          else:
             return i['answer']
 
     except pymongo.errors.OperationFailure as e:
-        answer = openaiSearch(im)
+        answer = "Sorry! Our database is still learning"
         return answer
     except Exception as ex:
-        answer = openaiSearch(im)
+        answer = "Sorry! Our database is still learning"
         return answer
-
-
 
 
 def getResponse(userquestion):
@@ -106,6 +88,24 @@ def getResponse(userquestion):
 
     return answer
 
+# FUTURE ENHANCEMENT
+# We can extend the capability of our chatbot by integrating it with LLMs using below function
+
+def openaiSearch(im):
+    client = OpenAI(api_key=config.getOpenAIKey())
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo-0125",
+        response_format={"type": "json_object"},
+        messages=[
+            {"role": "system", "content": "You are an AI assistant in an data Science world. You should identify educational questions. \
+                 This platform receives question and provides relevant answer. \
+                 Respond with a JSON object that contains only one field, 'answser'. Don't include the word, answer:, before the actual sentence "},
+            {"role": "user",
+             "content": f"{im}?"}
+        ]
+    )
+    answer = response.choices[0].message.content
+    return answer
 
 
 
